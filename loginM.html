@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Gestion DME</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Page de connexion */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header img {
+            width: 80px;
+            margin-bottom: 1rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .login-form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .login-form-table td {
+            padding: 8px 0;
+            vertical-align: middle;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .form-group label i {
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .login-footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .login-footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .login-footer p {
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+                margin: 10px;
+            }
+            
+            .login-header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <img src="image/1.png" alt="Logo Médical">
+            <h1>Gestion des Dossiers Médicaux</h1>
+        </div>
+        
+        <form class="login-form">
+            <table class="login-form-table">
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label for="username"><i class="fas fa-user"></i> Identifiant</label>
+                            <input type="text" id="username" placeholder="Email ou nom d'utilisateur" required>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                            <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                       <a href="1,1.html"> <button type="submit" class="login-btn">Se connecter</button> </a>
+                    </td>
+                </tr>
+            </table>
+            
+            <div class="login-footer">
+                <a href="#">Mot de passe oublié ?</a>
+                <p>Vous n'avez pas de compte ? <a href="inscriptionM.html">Créer un compte</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Fonction pour afficher/masquer le mot de passe
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        
+        togglePassword.addEventListener('click', function() {
+            // Basculer entre type password et text
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Changer l'icône
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Validation du formulaire
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simuler une connexion réussie
+            window.location.href = "1,1.html";
+        });
+    </script>
+</body>
+</html>

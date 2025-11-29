@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Santé en Ligne - Plateforme Médicale Intelligente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0ea5e9;
+            --accent: #3b82f6;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+        }
+
+        /* Header Styles */
+        .navbar {
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-style: italic;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(37, 99, 235, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .hero-content {
+            flex: 1;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            color: var(--primary);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-icon {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-text strong {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-text span {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .hero-image {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-image img {
+            width: 90%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Features Section */
+        .section {
+            padding: 5rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-desc {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-link {
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .feature-link:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.2;
+            position: absolute;
+            top: -1.5rem;
+            left: -1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Emergency Banner */
+        .emergency-banner {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1280px;
+            margin: 0 auto 3rem;
+        }
+
+        .emergency-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .emergency-icon {
+            background: var(--danger);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .emergency-text h3 {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .emergency-text p {
+            color: var(--gray);
+        }
+
+        .emergency-number {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        /* Report Section */
+        .report-section {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .report-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-icon {
+            background: var(--primary);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .report-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .report-content p {
+            color: var(--gray);
+        }
+
+        .report-features {
+            margin-bottom: 2rem;
+        }
+
+        .report-features h4 {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .report-features ul {
+            color: var(--gray);
+            line-height: 1.8;
+            padding-left: 1.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .footer-logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        .footer-about p {
+            color: var(--gray-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+        }
+
+        .footer-links h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--gray-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--gray-light);
+            margin-bottom: 1rem;
+        }
+
+        .footer-bottom {
+            max-width: 1280px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: var(--gray-light);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .hero-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-actions, .hero-stats {
+                justify-content: center;
+            }
+
+            .hero-image {
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .emergency-banner {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .report-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="image/1.png" alt="Ma Santé en Ligne">
+                <span class="logo-text">Ma Santé en Ligne</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index2.html">Accueil</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            
+            <div class="auth-buttons">
+                <a href="home4.html"><button class="btn btn-outline">Connexion</button></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Gestion médicale <span>simplifiée</span></h1>
+                <p class="hero-subtitle">
+                    La plateforme tout-en-un pour les professionnels de santé. Gérez vos patients, rendez-vous et dossiers médicaux en toute sécurité depuis n'importe où.
+                </p>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="stat-text">
+                            <strong>1,250+</strong>
+                            <span>Professionnels</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-text">
+                            <strong>45,000+</strong>
+                            <span>Patients</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-text">
+                            <strong>350k+</strong>
+                            <span>RDV/mois</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <img src="image/nada.png" alt="Interface Ma Santé en Ligne">
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Banner -->
+    <div class="section">
+        <div class="emergency-banner">
+            <div class="emergency-content">
+                <div class="emergency-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="emergency-text">
+                    <h3>Urgence médicale</h3>
+                    <p>En cas d'urgence, contactez immédiatement les services d'urgence</p>
+                </div>
+            </div>
+            <div class="emergency-number">
+                <i class="fas fa-phone-alt"></i> 15 ou 112
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="section">
+        <div class="section-title">
+            <h2>Nos fonctionnalités clés</h2>
+            <p>Découvrez comment Ma Santé en Ligne révolutionne votre pratique médicale au quotidien</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-injured"></i>
+                </div>
+                <h3 class="feature-title">Gestion des patients</h3>
+                <p class="feature-desc">
+                    Stockage sécurisé des dossiers patients, historique médical complet, gestion des traitements et prescriptions.
+                </p>
+                <a href="patients.html" class="feature-link">
+                    En savoir plus <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3 class="feature-title">Prise de rendez-vous</h3>
+                <p class="feature-desc">
+                    Calendrier intelligent, rappels automatiques, gestion des disponibilités et annulations en temps réel.
+                </p>
+                <a href="rendezvous.html" class="feature-link">
+                    En savoir plus <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <h3 class="feature-title">Dossiers médicaux</h3>
+                <p class="feature-desc">
+                    Dossiers électroniques complets, partage sécurisé entre professionnels, historique des consultations.
+                </p>
+                <a href="dossiers.html" class="feature-link">
+                    En savoir plus <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                </div>
+                <h3 class="feature-title">Prescriptions</h3>
+                <p class="feature-desc">
+                    Édition numérique de prescriptions, vérification des interactions médicamenteuses, archivage automatique.
+                </p>
+                <a href="#" class="feature-link">
+                    En savoir plus <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Analytics</h3>
+                <p class="feature-desc">
+                    Tableaux de bord personnalisés, statistiques de pratique, indicateurs de performance clés.
+                </p>
+                <a href="#" class="feature-link">
+                    En savoir plus <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">Sécurité</h3>
+                <p class="feature-desc">
+                    Chiffrement des données, authentification forte, conformité RGPD et certifications santé.
+                </p>
+                <a href="#" class="feature-link">
+                    En savoir plus <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials">
+        <div class="section-title">
+            <h2>Ils nous font confiance</h2>
+            <p>Découvrez ce que les professionnels de santé disent de notre plateforme</p>
+        </div>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    Ma Santé en Ligne a transformé ma pratique médicale. La gestion des rendez-vous est devenue tellement plus simple et mes patients adorent pouvoir prendre RDV en ligne.
+                </p>
+                <div class="testimonial-author">
+                    <img src="image/2.png" alt="Dr. Sophie Martin" class="author-avatar">
+                    <div class="author-info">
+                        <h4>Dr. Sophie Martin</h4>
+                        <p>Médecin généraliste, Paris</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    La sécurité des données est primordiale dans notre métier. Cette plateforme offre toutes les garanties nécessaires tout en restant incroyablement simple à utiliser.
+                </p>
+                <div class="testimonial-author">
+                    <img src="image/2.png" alt="Dr. Jean Lefèvre" class="author-avatar">
+                    <div class="author-info">
+                        <h4>Dr. Jean Lefèvre</h4>
+                        <p>Cardiologue, Lyon</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    L'intégration avec les autres systèmes de santé et la possibilité de partager des dossiers sécurisés entre professionnels est un vrai plus pour la coordination des soins.
+                </p>
+                <div class="testimonial-author">
+                    <img src="image/2.png" alt="Dr. Amélie Dubois" class="author-avatar">
+                    <div class="author-info">
+                        <h4>Dr. Amélie Dubois</h4>
+                        <p>Pédiatre, Marseille</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Section -->
+    <section class="section">
+        <div class="section-title">
+            <h2>Documentation du Projet</h2>
+            <p>Téléchargez notre cahier des charges complet pour comprendre en détail notre solution</p>
+        </div>
+        
+        <div class="report-section">
+            <div class="report-header">
+                <div class="report-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="report-content">
+                    <h3>Cahier des Charges - Ma Santé en Ligne</h3>
+                    <p>Spécifications techniques et fonctionnelles de la plateforme</p>
+                </div>
+            </div>
+            
+            <div class="report-features">
+                <h4>Contenu du document :</h4>
+                <ul>
+                    <li>Contexte général et spécifique du projet</li>
+                    <li>Objectifs principaux de la solution</li>
+                    <li>Exigences fonctionnelles et techniques</li>
+                    <li>Architecture du système proposé</li>
+                    <li>Contraintes et réglementations</li>
+                </ul>
+            </div>
+            
+            <a href="Cahier_des_charges_(2).pdf" download="Cahier_des_charges_Ma_Sante_en_Ligne.pdf" class="btn btn-primary">
+                <i class="fas fa-download"></i> Télécharger le rapport complet (PDF)
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-about">
+                <div class="footer-logo">
+                    <img src="image/1.png" alt="Ma Santé en Ligne">
+                    <span class="footer-logo-text">Ma Santé en Ligne</span>
+                </div>
+                <p>
+                    La plateforme de gestion médicale tout-en-un pour les professionnels de santé. Sécurisée, intuitive et conforme aux réglementations.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Solutions</h3>
+                <ul>
+                    <li><a href="#">Médecins généralistes</a></li>
+                    <li><a href="#">Spécialistes</a></li>
+                    <li><a href="#">Centres médicaux</a></li>
+                    <li><a href="#">Hôpitaux</a></li>
+                    <li><a href="#">Laboratoires</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Ressources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Formations</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h3>Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Rue de la Santé, 75015 Paris</p>
+                <p><i class="fas fa-phone-alt"></i> +33 1 23 45 67 89</p>
+                <p><i class="fas fa-envelope"></i> contact@masanteenligne.fr</p>
+                <p><i class="fas fa-clock"></i> Lun-Ven: 9h-18h</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Ma Santé en Ligne. Tous droits réservés. | <a href="#">Mentions légales</a> | <a href="#">Politique de confidentialité</a> | <a href="#">CGU</a></p>
+            <p>Certifié HDS (Hébergeur de Données de Santé) - conforme RGPD</p>
+        </div>
+    </footer>
+
+    <script>
+        // Animation for navbar on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animation for feature cards on scroll
+        const featureCards = document.querySelectorAll('.feature-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        featureCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.5s ease';
+            observer.observe(card);
+        });
+
+        // Force download of PDF when clicking the download button
+        document.querySelector('a[download]').addEventListener('click', function(e) {
+            // This ensures the download attribute works as expected
+            // No need for additional JavaScript if the file is properly served
+            // If you need to handle the download programmatically, you could use:
+            // e.preventDefault();
+            // window.location.href = this.href;
+            // Or create a blob download if the file is in memory
+        });
+    </script>
+</body>
+</html>

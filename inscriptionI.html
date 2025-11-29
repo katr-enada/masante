@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Gestion DME</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Votre CSS complet ici */
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --secondary-dark: #27ae60;
+            --danger: #e74c3c;
+            --danger-dark: #c0392b;
+            --warning: #f39c12;
+            --warning-dark: #e67e22;
+            --info: #1abc9c;
+            --info-dark: #16a085;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #95a5a6;
+            --dark-gray: #7f8c8d;
+            --white: #ffffff;
+            --black: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--black);
+            line-height: 1.6;
+        }
+
+        .registration-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .registration-header .logo {
+            width: 100px;
+            margin-bottom: 1rem;
+        }
+
+        .registration-header h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .registration-header p {
+            color: var(--gray);
+        }
+
+        .registration-form .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .registration-form .form-label {
+            display: flex;
+            align-items: center;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .registration-form .form-label i {
+            margin-right: 0.5rem;
+            color: var(--gray);
+        }
+
+        .registration-form .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--white);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .registration-form .form-control:focus {
+            border-color: var(--primary);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .login-link a {
+            color: var(--primary);
+        }
+
+        .error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .registration-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <div class="registration-header">
+            <img src="image/1.png" alt="Logo Médical" class="logo">
+            <h1>Créer un compte</h1>
+            <p>Système de gestion électronique des dossiers patients</p>
+        </div>
+        
+        <form class="registration-form" id="registrationForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lastname"><i class="fas fa-user"></i> Nom</label>
+                    <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Entrez votre nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="firstname"><i class="fas fa-user"></i> Prénom</label>
+                    <input type="text" id="firstname" name="firstname" class="form-control" placeholder="Entrez votre prénom" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Entrez votre email" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Créez un mot de passe" required>
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword"><i class="fas fa-lock"></i> Confirmation</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirmez le mot de passe" required>
+                    <i class="fas fa-eye password-toggle" id="toggleConfirmPassword"></i>
+                    <div id="passwordError" class="error"></div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthdate"><i class="fas fa-calendar"></i> Date de naissance</label>
+                    <input type="date" id="birthdate" name="birthdate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender"><i class="fas fa-venus-mars"></i> Sexe</label>
+                    <select id="gender" name="gender" class="form-control" required>
+                        <option value="">Sélectionner</option>
+                        <option value="M">Masculin</option>
+                        <option value="F">Féminin</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone"><i class="fas fa-phone"></i> Téléphone</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Entrez votre numéro de téléphone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="address"><i class="fas fa-map-marker-alt"></i> Adresse</label>
+                <input type="text" id="address" name="address" class="form-control" placeholder="Entrez votre adresse" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="city"><i class="fas fa-city"></i> Ville</label>
+                <input type="text" id="city" name="city" class="form-control" placeholder="Entrez votre ville" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-user-plus"></i> S'inscrire
+            </button>
+            
+            <div class="login-link">
+                <p>Déjà inscrit ? <a href="loginI.html">Connectez-vous</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Fonction pour afficher/masquer le mot de passe
+        function setupPasswordToggle(passwordFieldId, toggleIconId) {
+            const togglePassword = document.querySelector(toggleIconId);
+            const password = document.querySelector(passwordFieldId);
+            
+            togglePassword.addEventListener('click', function() {
+                // Basculer entre type password et text
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                
+                // Changer l'icône
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Configurer les toggles pour les deux champs de mot de passe
+        setupPasswordToggle('#password', '#togglePassword');
+        setupPasswordToggle('#confirmPassword', '#toggleConfirmPassword');
+
+        // Validation du formulaire
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorElement = document.getElementById('passwordError');
+            
+            if (password !== confirmPassword) {
+                errorElement.textContent = "Les mots de passe ne correspondent pas";
+                e.preventDefault();
+            } else {
+                errorElement.textContent = "";
+                // Ici vous pourriez ajouter la logique pour envoyer les données au serveur
+                alert('Inscription réussie !');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Documents - Ma Santé en Ligne</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a89dc;
+            --primary-light: #e8f4fd;
+            --primary-dark: #2a5a9a;
+            --secondary: #6cbbf0;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray: #6b7280;
+            --gray-dark: #374151;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-patient {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-patient img {
+            height: 50px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Sidebar */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            padding: 2rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            height: calc(100vh - 72px);
+            top: 72px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: var(--gray-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(74, 137, 220, 0.3);
+        }
+
+        /* Documents Section */
+        .documents-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .documents-filter {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: var(--white);
+            color: var(--gray-dark);
+        }
+
+        .documents-list {
+            padding: 0;
+        }
+
+        .document-category {
+            margin-bottom: 1.5rem;
+        }
+
+        .category-header {
+            padding: 1rem 1.5rem;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .document-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .document-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(74, 137, 220, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .document-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .document-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-dark);
+        }
+
+        .document-meta {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .document-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .document-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .action-btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .action-btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .action-btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        /* Document Viewer Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: modalFadeIn 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .document-viewer {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .document-viewer iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .document-info {
+            margin-top: 1.5rem;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--gray-dark);
+            min-width: 120px;
+        }
+
+        .info-value {
+            color: var(--gray);
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--primary-light);
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+                padding: 1.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding: 1rem;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .nav-menu {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 0;
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+            }
+            
+            .nav-link {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .main-content {
+                padding: 1.5rem 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .documents-filter {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .filter-group {
+                width: 100%;
+            }
+            
+            .document-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="logo-patient">
+            <img src="image/1.png" alt="Ma Santé en Ligne">
+            <span>Mon Espace Patient</span>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-profile">
+                <img src="image/patient-avatar.jpg" alt="Photo de profil" class="user-avatar">
+                <span class="user-name">Jean Dupont</span>
+            </div>
+            <a href="index2.html"><button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button></a>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="2,1.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,2.html" class="nav-link">
+                        <i class="fas fa-calendar-check"></i>
+                        Mes rendez-vous
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,3.html" class="nav-link active">
+                        <i class="fas fa-file-medical"></i>
+                        Mes documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,4.html" class="nav-link">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                        Mes ordonnances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,5.html" class="nav-link">
+                        <i class="fas fa-user-md"></i>
+                        Mes médecins
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,6.html" class="nav-link">
+                        <i class="fas fa-comment-medical"></i>
+                        Messagerie
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,7.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Paramètres
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-file-medical"></i> Mes documents médicaux
+                </h1>
+            </div>
+
+            <!-- Documents Container -->
+            <div class="documents-container">
+                <!-- Documents List -->
+                <div class="documents-list">
+                    <!-- Comptes-rendus -->
+                    <div class="document-category">
+                        <div class="category-header">
+                            <span>Comptes-rendus médicaux</span>
+                            <span>5 documents</span>
+                        </div>
+                        <div class="documents-grid">
+                            <div class="document-card" data-doc-id="cr-cardio-2023" data-doc-name="Compte-rendu consultation cardiologie" data-doc-date="15/11/2023" data-doc-author="Dr. Sophie Martin" data-doc-type="Compte-rendu">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-medical"></i>
+                                </div>
+                                <h3 class="document-name">Compte-rendu consultation cardiologie</h3>
+                                <div class="document-meta">
+                                    <div class="document-date">
+                                        <i class="far fa-calendar-alt"></i> 15/11/2023
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-user-md"></i> Dr. Sophie Martin
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="action-btn action-btn-primary view-doc-btn">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </button>
+                                    <button class="action-btn action-btn-outline download-doc-btn">
+                                        <i class="fas fa-download"></i> Télécharger
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="document-card" data-doc-id="cr-hosp-2023" data-doc-name="Compte-rendu hospitalisation" data-doc-date="22/08/2023" data-doc-author="CHU de Lyon" data-doc-type="Compte-rendu">
+                                <div class="document-icon">
+                                    <i class="fas fa-procedures"></i>
+                                </div>
+                                <h3 class="document-name">Compte-rendu hospitalisation</h3>
+                                <div class="document-meta">
+                                    <div class="document-date">
+                                        <i class="far fa-calendar-alt"></i> 22/08/2023
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-hospital"></i> CHU de Lyon
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="action-btn action-btn-primary view-doc-btn">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </button>
+                                    <button class="action-btn action-btn-outline download-doc-btn">
+                                        <i class="fas fa-download"></i> Télécharger
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="document-card" data-doc-id="bilan-cardio-2023" data-doc-name="Bilan cardiaque annuel" data-doc-date="12/05/2023" data-doc-author="Dr. Sophie Martin" data-doc-type="Compte-rendu">
+                                <div class="document-icon">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                                <h3 class="document-name">Bilan cardiaque annuel</h3>
+                                <div class="document-meta">
+                                    <div class="document-date">
+                                        <i class="far fa-calendar-alt"></i> 12/05/2023
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-user-md"></i> Dr. Sophie Martin
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="action-btn action-btn-primary view-doc-btn">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </button>
+                                    <button class="action-btn action-btn-outline download-doc-btn">
+                                        <i class="fas fa-download"></i> Télécharger
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Résultats d'analyses -->
+                    <div class="document-category">
+                        <div class="category-header">
+                            <span>Résultats d'analyses</span>
+                            <span>4 documents</span>
+                        </div>
+                        <div class="documents-grid">
+                            <div class="document-card" data-doc-id="bilan-sanguin-2023" data-doc-name="Bilan sanguin complet" data-doc-date="10/11/2023" data-doc-author="Laboratoire Pasteur" data-doc-type="Analyse">
+                                <div class="document-icon">
+                                    <i class="fas fa-vial"></i>
+                                </div>
+                                <h3 class="document-name">Bilan sanguin complet</h3>
+                                <div class="document-meta">
+                                    <div class="document-date">
+                                        <i class="far fa-calendar-alt"></i> 10/11/2023
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-flask"></i> Laboratoire Pasteur
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="action-btn action-btn-primary view-doc-btn">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </button>
+                                    <button class="action-btn action-btn-outline download-doc-btn">
+                                        <i class="fas fa-download"></i> Télécharger
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="document-card" data-doc-id="analyse-urine-2023" data-doc-name="Analyse d'urine" data-doc-date="05/09/2023" data-doc-author="Laboratoire BioSanté" data-doc-type="Analyse">
+                                <div class="document-icon">
+                                    <i class="fas fa-urine"></i>
+                                </div>
+                                <h3 class="document-name">Analyse d'urine</h3>
+                                <div class="document-meta">
+                                    <div class="document-date">
+                                        <i class="far fa-calendar-alt"></i> 05/09/2023
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-flask"></i> Laboratoire BioSanté
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="action-btn action-btn-primary view-doc-btn">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </button>
+                                    <button class="action-btn action-btn-outline download-doc-btn">
+                                        <i class="fas fa-download"></i> Télécharger
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Imagerie médicale -->
+                    <div class="document-category">
+                        <div class="category-header">
+                            <span>Imagerie médicale</span>
+                            <span>3 documents</span>
+                        </div>
+                        <div class="documents-grid">
+                            <div class="document-card" data-doc-id="radio-thorax-2023" data-doc-name="Radiographie thorax" data-doc-date="18/10/2023" data-doc-author="Clinique du Parc" data-doc-type="Imagerie">
+                                <div class="document-icon">
+                                    <i class="fas fa-x-ray"></i>
+                                </div>
+                                <h3 class="document-name">Radiographie thorax</h3>
+                                <div class="document-meta">
+                                    <div class="document-date">
+                                        <i class="far fa-calendar-alt"></i> 18/10/2023
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-hospital"></i> Clinique du Parc
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="action-btn action-btn-primary view-doc-btn">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </button>
+                                    <button class="action-btn action-btn-outline download-doc-btn">
+                                        <i class="fas fa-download"></i> Télécharger
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Document Viewer Modal -->
+    <div class="modal" id="documentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="docModalTitle">Document médical</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="document-viewer">
+                    <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+                    <div class="document-info">
+                        <div class="info-row">
+                            <span class="info-label">Nom du document:</span>
+                            <span class="info-value" id="docName"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Type:</span>
+                            <span class="info-value" id="docType"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Date:</span>
+                            <span class="info-value" id="docDate"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Auteur:</span>
+                            <span class="info-value" id="docAuthor"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">Fermer</button>
+                <button class="btn btn-primary" id="downloadFromModal">
+                    <i class="fas fa-download"></i> Télécharger
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion du menu actif
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Confirmation de déconnexion
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+
+            // Variables pour gérer le document actuellement sélectionné
+            let currentDocumentId = null;
+            const documentModal = document.getElementById('documentModal');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            const pdfViewer = document.getElementById('pdfViewer');
+
+            // Base64 encoded PDFs for demonstration
+            const pdfFiles = {
+                'cr-cardio-2023': generateSamplePDF('Compte-rendu consultation cardiologie', 'Dr. Sophie Martin'),
+                'cr-hosp-2023': generateSamplePDF('Compte-rendu hospitalisation', 'CHU de Lyon'),
+                'bilan-cardio-2023': generateSamplePDF('Bilan cardiaque annuel', 'Dr. Sophie Martin'),
+                'bilan-sanguin-2023': generateSamplePDF('Bilan sanguin complet', 'Laboratoire Pasteur'),
+                'analyse-urine-2023': generateSamplePDF('Analyse d\'urine', 'Laboratoire BioSanté'),
+                'radio-thorax-2023': generateSamplePDF('Radiographie thorax', 'Clinique du Parc')
+            };
+
+            // Fonction pour générer un PDF factice en base64
+            function generateSamplePDF(title, author) {
+                // En réalité, vous utiliseriez des vrais PDFs depuis votre serveur
+                // Ceci est juste pour la démonstration
+                const pdfContent = `%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/Resources <<
+/Font <<
+/F1 4 0 R
+>>
+>>
+/Contents 5 0 R
+>>
+endobj
+4 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+5 0 obj
+<<
+/Length 100
+>>
+stream
+BT
+/F1 24 Tf
+100 700 Td
+(${title}) Tj
+ET
+BT
+/F1 18 Tf
+100 650 Td
+(Auteur: ${author}) Tj
+ET
+BT
+/F1 14 Tf
+100 600 Td
+(Ceci est un exemple de document PDF généré dynamiquement) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000015 00000 n 
+0000000067 00000 n 
+0000000120 00000 n 
+0000000215 00000 n 
+0000000256 00000 n 
+trailer
+<<
+/Size 6
+/Root 1 0 R
+>>
+startxref
+365
+%%EOF`;
+
+                // Convert to base64
+                return btoa(pdfContent);
+            }
+
+            // Gestion des boutons "Voir"
+            const viewDocBtns = document.querySelectorAll('.view-doc-btn');
+            viewDocBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.document-card');
+                    currentDocumentId = card.getAttribute('data-doc-id');
+                    
+                    // Remplir les informations du modal
+                    document.getElementById('docModalTitle').textContent = card.getAttribute('data-doc-name');
+                    document.getElementById('docName').textContent = card.getAttribute('data-doc-name');
+                    document.getElementById('docType').textContent = card.getAttribute('data-doc-type');
+                    document.getElementById('docDate').textContent = card.getAttribute('data-doc-date');
+                    document.getElementById('docAuthor').textContent = card.getAttribute('data-doc-author');
+                    
+                    // Afficher le PDF dans l'iframe
+                    const pdfData = pdfFiles[currentDocumentId];
+                    pdfViewer.src = `data:application/pdf;base64,${pdfData}`;
+                    
+                    // Afficher le modal
+                    documentModal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // Gestion des boutons "Télécharger"
+            const downloadDocBtns = document.querySelectorAll('.download-doc-btn');
+            downloadDocBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.document-card');
+                    const docId = card.getAttribute('data-doc-id');
+                    const docName = card.getAttribute('data-doc-name');
+                    
+                    // Télécharger le PDF
+                    downloadPDF(docId, docName);
+                });
+            });
+
+            // Téléchargement depuis le modal
+            document.getElementById('downloadFromModal').addEventListener('click', function() {
+                if (currentDocumentId) {
+                    const docName = document.getElementById('docName').textContent;
+                    downloadPDF(currentDocumentId, docName);
+                }
+            });
+
+            // Fonction pour télécharger un PDF
+            function downloadPDF(docId, docName) {
+                const pdfData = pdfFiles[docId];
+                if (!pdfData) {
+                    alert('Document non trouvé');
+                    return;
+                }
+
+                // Créer un blob à partir des données base64
+                const byteCharacters = atob(pdfData);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], {type: 'application/pdf'});
+
+                // Créer un lien de téléchargement
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${docName}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Libérer la mémoire
+                setTimeout(() => URL.revokeObjectURL(link.href), 100);
+            }
+
+            // Fermer le modal
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    documentModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    pdfViewer.src = '';
+                });
+            });
+            
+            // Fermer le modal en cliquant à l'extérieur
+            window.addEventListener('click', function(e) {
+                if (e.target === documentModal) {
+                    documentModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    pdfViewer.src = '';
+                }
+            });
+
+            // Animation des cartes de documents
+            const documentCards = document.querySelectorAll('.document-card');
+            documentCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

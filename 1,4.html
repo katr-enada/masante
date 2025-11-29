@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier Patient - Dr. Dupont | Ma Santé en Ligne</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a89dc;
+            --primary-light: #e8f4fd;
+            --primary-dark: #2a5a9a;
+            --secondary: #6cbbf0;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray: #6b7280;
+            --gray-dark: #374151;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container img {
+            height: 50px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .logout-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            padding: 2rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            height: calc(100vh - 72px);
+            top: 72px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: var(--gray-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        /* Patient Header */
+        .patient-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .patient-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+
+        .patient-info {
+            flex: 1;
+        }
+
+        .patient-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .patient-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--gray);
+        }
+
+        .patient-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Patient Profile Section */
+        .patient-profile {
+            display: flex;
+            padding: 25px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .patient-photo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 4px solid var(--primary);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .patient-details {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .patient-name-large {
+            font-size: 28px;
+            color: var(--primary-dark);
+            margin: 0 0 10px 0;
+            grid-column: 1 / -1;
+        }
+
+        .detail-item {
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--gray);
+            display: block;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: var(--gray-dark);
+            font-size: 16px;
+        }
+
+        .patient-actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            min-width: 200px;
+        }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            background-color: white;
+            padding: 0 25px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+            border-radius: 12px 12px 0 0;
+            box-shadow: var(--card-shadow);
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            position: relative;
+            font-weight: 500;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .tab-badge {
+            background-color: var(--danger);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 25px;
+            background-color: white;
+            animation: fadeIn 0.3s ease;
+            border-radius: 0 0 12px 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Medical History */
+        .section-title {
+            color: var(--primary-dark);
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-item {
+            border-left: 3px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            background-color: var(--primary-light);
+            border-radius: 0 5px 5px 0;
+            position: relative;
+        }
+
+        .history-date {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-date .visit-type {
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .history-detail {
+            margin-bottom: 8px;
+        }
+
+        .history-label {
+            font-weight: 600;
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .history-actions {
+            margin-top: 15px;
+            text-align: right;
+        }
+
+        /* Prescriptions */
+        .prescription-item {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: var(--white);
+        }
+
+        .prescription-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .prescription-status {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-expired {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .medication-list {
+            margin: 15px 0;
+        }
+
+        .medication-item {
+            display: flex;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .medication-item:last-child {
+            border-bottom: none;
+        }
+
+        .medication-name {
+            flex: 2;
+            font-weight: 500;
+        }
+
+        .medication-dosage {
+            flex: 1;
+        }
+
+        .medication-instruction {
+            flex: 3;
+            color: var(--gray);
+        }
+
+        /* Appointments */
+        .appointment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            background-color: var(--white);
+        }
+
+        .appointment-item:hover {
+            background-color: var(--primary-light);
+        }
+
+        .appointment-time {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 120px;
+        }
+
+        .appointment-purpose {
+            flex-grow: 1;
+            padding: 0 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(74, 137, 220, 0.1);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 13px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #e6f7ee;
+            color: var(--success);
+        }
+
+        .badge-primary {
+            background: #e6f0f7;
+            color: var(--primary);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .action-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 137, 220, 0.2);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 0;
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+            }
+            
+            .patient-profile {
+                flex-direction: column;
+            }
+            
+            .patient-photo {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .patient-actions {
+                align-items: flex-start;
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .tabs-nav {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .patient-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="logo-container">
+            <img src="image/1.png" alt="Ma Santé en Ligne">
+            <span>Espace Médecin</span>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-profile">
+                <img src="image/2.png" alt="Photo de profil" class="avatar">
+                <span>Dr. doctor 1 </span>
+            </div>
+           <a href="index2.html"> <button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button></a>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="1,1.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="1,2.html" class="nav-link">
+                        <i class="fas fa-calendar-check"></i>
+                        Agenda
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="1,3.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Mes patients
+                    </a>
+                </li>
+               
+                <li class="nav-item">
+                    <a href="1,5.html" class="nav-link">
+                        <i class="fas fa-prescription"></i>
+                        Ordonnances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="1,6.html" class="nav-link">
+                        <i class="fas fa-comment-medical"></i>
+                        Messagerie
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="1,7.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Paramètres
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Patient Header -->
+            <div class="patient-header">
+                <img src="image/3.png" alt="Patient" class="patient-avatar">
+                <div class="patient-info">
+                    <h1 class="patient-name"> patient 1 </h1>
+                    <div class="patient-meta">
+                        <div class="patient-meta-item">
+                            <i class="fas fa-birthday-cake"></i>
+                            <span>40 ans (15/05/1985)</span>
+                        </div>
+                        <div class="patient-meta-item">
+                            <i class="fas fa-id-card"></i>
+                            <span>N° dossier: MARJ19850315</span>
+                        </div>
+                        <div class="patient-meta-item">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Dernière consultation: 25/05/2025</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="1,3.html" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+
+            <!-- Patient Profile Section -->
+            <div class="patient-profile">
+                <img src="image/3.png" alt="patient 1 " class="patient-photo">
+                
+                <div class="patient-details">
+                    <h2 class="patient-name-large"> patient 1 </h2>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Date de naissance</span>
+                        <span class="detail-value">15/05/1985 (40 ans)</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Genre</span>
+                        <span class="detail-value">Masculin</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Téléphone</span>
+                        <span class="detail-value"> 06 12 34 56 78</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">patient1@gmail.com</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Adresse</span>
+                        <span class="detail-value">15 Rue wlad brahem , setif</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Groupe sanguin</span>
+                        <span class="detail-value">A+</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Médecin traitant</span>
+                        <span class="detail-value">Dr. doctor 1 </span>
+                    </div>
+                </div>
+                
+                <div class="patient-actions">
+                    <button id="newConsultationBtn" class="btn btn-primary"><i class="fas fa-file-medical"></i> Nouvelle consultation</button>
+                    <button id="newPrescriptionBtn" class="btn btn-primary" style="margin-top: 10px;"><i class="fas fa-prescription"></i> Nouvelle ordonnance</button>
+                    <button id="newAppointmentBtn" class="btn btn-primary" style="margin-top: 10px;"><i class="fas fa-calendar-plus"></i> Nouveau RDV</button>
+                </div>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="tabs-nav">
+                <div class="tab active" data-tab="medical">
+                    <i class="fas fa-history"></i> Historique Médical
+                </div>
+                <div class="tab" data-tab="prescriptions">
+                    <i class="fas fa-prescription-bottle-alt"></i> Ordonnances
+                    <span class="tab-badge">2 actives</span>
+                </div>
+                <div class="tab" data-tab="appointments">
+                    <i class="fas fa-calendar-alt"></i> Rendez-vous
+                </div>
+                <div class="tab" data-tab="documents">
+                    <i class="fas fa-file-medical-alt"></i> Documents
+                </div>
+            </div>
+            
+            <!-- Medical History Tab -->
+            <div class="tab-content active" id="medical">
+                
+                
+                
+
+                </div>
+            </div>
+            
+            <!-- Prescriptions Tab -->
+            <div class="tab-content" id="prescriptions">
+                <div class="quick-actions">
+                    <button id="newPrescriptionTabBtn" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Nouvelle ordonnance</button>
+                    
+                </div>
+                
+                <h3 class="section-title">Ordonnances en cours</h3>
+                
+                <div class="prescription-item">
+                    <div class="prescription-header">
+                        <div>
+                            <strong>N° ORD-2025-05-22</strong> - Valide jusqu'au 15/06/2025
+                        </div>
+                        <span class="prescription-status status-active">Active</span>
+                    </div>
+                    <div class="medication-list">
+                        <div class="medication-item">
+                            <div class="medication-name">Doliprane  1000 mg</div>
+                            <div class="medication-dosage">1 comprimé</div>
+                            <div class="medication-instruction">3 fois par jour</div>
+                        </div>
+                        <div class="medication-item">
+                            <div class="medication-name">Ibuprofène 400 mg</div>
+                            <div class="medication-dosage">1 comprimé</div>
+                            <div class="medication-instruction">Si necessaire</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Appointments Tab -->
+            <div class="tab-content" id="appointments">
+                <div class="quick-actions">
+                    <button id="newAppointmentTabBtn" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Nouveau RDV</button>
+                  
+                </div>
+                
+                <h3 class="section-title">Prochains Rendez-vous</h3>
+                
+                <div class="appointment-item">
+                    <div class="appointment-time">
+                        <i class="fas fa-calendar-day"></i> 25/05/2025 - 09:00
+                    </div>
+                    <div class="appointment-purpose">
+                        Contrôle annuel - Durée: 1 heure 
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Documents Tab -->
+            <div class="tab-content" id="documents">
+                <div class="quick-actions">
+                    <button id="addDocumentBtn" class="btn btn-primary btn-sm"><i class="fas fa-upload"></i> Ajouter document</button>
+                    
+                </div>
+                
+                <h3 class="section-title">Documents médicaux</h3>
+                
+                <p style="text-align: center; color: var(--gray); padding: 40px 0;">
+                    <i class="fas fa-folder-open" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
+                    Aucun document disponible pour ce patient
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Consultation Modal -->
+    <div id="consultationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nouvelle consultation</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="consultationForm">
+                <div class="form-group">
+                    <label for="consultationDate" class="form-label">Date</label>
+                    <input type="date" id="consultationDate" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="consultationReason" class="form-label">Motif</label>
+                    <input type="text" id="consultationReason" class="form-control" placeholder="Motif de la consultation" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="consultationNotes" class="form-label">Notes</label>
+                    <textarea id="consultationNotes" class="form-control form-textarea" placeholder="Notes de consultation"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline close-modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Prescription Modal -->
+    <div id="prescriptionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nouvelle ordonnance</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="prescriptionForm">
+                <div class="form-group">
+                    <label for="prescriptionDate" class="form-label">Date</label>
+                    <input type="date" id="prescriptionDate" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prescriptionDuration" class="form-label">Durée de validité</label>
+                    <select id="prescriptionDuration" class="form-control form-select" required>
+                        <option value="7">1 semaine</option>
+                        <option value="30" selected>1 mois</option>
+                        <option value="90">3 mois</option>
+                        <option value="180">6 mois</option>
+                        <option value="365">1 an</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Médicaments</label>
+                    <div id="medicationsContainer">
+                        <div class="medication-entry" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" class="form-control" placeholder="Nom du médicament" style="flex: 2;">
+                            <input type="text" class="form-control" placeholder="Dosage" style="flex: 1;">
+                            <input type="text" class="form-control" placeholder="Instructions" style="flex: 3;">
+                            <button type="button" class="btn btn-danger btn-sm remove-medication"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <button type="button" id="addMedicationBtn" class="btn btn-outline btn-sm"><i class="fas fa-plus"></i> Ajouter un médicament</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prescriptionNotes" class="form-label">Notes</label>
+                    <textarea id="prescriptionNotes" class="form-control form-textarea" placeholder="Notes supplémentaires"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline close-modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div id="appointmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nouveau rendez-vous</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label for="appointmentDate" class="form-label">Date</label>
+                    <input type="date" id="appointmentDate" class="form-control" required>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="appointmentStartTime" class="form-label">Heure de début</label>
+                        <input type="time" id="appointmentStartTime" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="appointmentEndTime" class="form-label">Heure de fin</label>
+                        <input type="time" id="appointmentEndTime" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentReason" class="form-label">Motif</label>
+                    <input type="text" id="appointmentReason" class="form-control" placeholder="Motif du rendez-vous" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentNotes" class="form-label">Notes</label>
+                    <textarea id="appointmentNotes" class="form-control form-textarea" placeholder="Notes supplémentaires"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline close-modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Document Modal -->
+    <div id="documentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Ajouter un document</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="documentForm">
+                <div class="form-group">
+                    <label for="documentType" class="form-label">Type de document</label>
+                    <select id="documentType" class="form-control form-select" required>
+                        <option value="">Sélectionnez un type</option>
+                        <option value="report">Compte rendu</option>
+                        <option value="result">Résultat d'examen</option>
+                        <option value="prescription">Ordonnance</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="documentDate" class="form-label">Date</label>
+                    <input type="date" id="documentDate" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="documentTitle" class="form-label">Titre</label>
+                    <input type="text" id="documentTitle" class="form-control" placeholder="Titre du document" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="documentFile" class="form-label">Fichier</label>
+                    <input type="file" id="documentFile" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="documentNotes" class="form-label">Notes</label>
+                    <textarea id="documentNotes" class="form-control form-textarea" placeholder="Notes supplémentaires"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline close-modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des onglets
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Retirer les classes actives
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    
+                    // Ajouter la classe active à l'onglet cliqué
+                    this.classList.add('active');
+                    
+                    // Afficher le contenu correspondant
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Gestion des modals
+            const modals = {
+                consultation: document.getElementById('consultationModal'),
+                prescription: document.getElementById('prescriptionModal'),
+                appointment: document.getElementById('appointmentModal'),
+                document: document.getElementById('documentModal')
+            };
+
+            const openModal = (modal) => {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                
+                // Pré-remplir la date avec aujourd'hui
+                const today = new Date().toISOString().split('T')[0];
+                const dateInput = modal.querySelector('input[type="date"]');
+                if (dateInput) {
+                    dateInput.value = today;
+                }
+            };
+
+            const closeModal = (modal) => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            };
+
+            // Gestion des boutons pour ouvrir les modals
+            document.getElementById('newConsultationBtn').addEventListener('click', () => openModal(modals.consultation));
+            document.getElementById('newPrescriptionBtn').addEventListener('click', () => openModal(modals.prescription));
+            document.getElementById('newPrescriptionTabBtn').addEventListener('click', () => openModal(modals.prescription));
+            document.getElementById('newAppointmentBtn').addEventListener('click', () => openModal(modals.appointment));
+            document.getElementById('newAppointmentTabBtn').addEventListener('click', () => openModal(modals.appointment));
+            document.getElementById('addDocumentBtn').addEventListener('click', () => openModal(modals.document));
+
+            // Gestion des boutons pour fermer les modals
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    closeModal(modal);
+                });
+            });
+
+            // Fermer le modal si on clique en dehors
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    closeModal(event.target);
+                }
+            });
+
+            // Gestion de l'ajout de médicaments dans le formulaire d'ordonnance
+            document.getElementById('addMedicationBtn').addEventListener('click', function() {
+                const container = document.getElementById('medicationsContainer');
+                const newEntry = document.createElement('div');
+                newEntry.className = 'medication-entry';
+                newEntry.style.display = 'flex';
+                newEntry.style.gap = '10px';
+                newEntry.style.marginBottom = '10px';
+                newEntry.innerHTML = `
+                    <input type="text" class="form-control" placeholder="Nom du médicament" style="flex: 2;">
+                    <input type="text" class="form-control" placeholder="Dosage" style="flex: 1;">
+                    <input type="text" class="form-control" placeholder="Instructions" style="flex: 3;">
+                    <button type="button" class="btn btn-danger btn-sm remove-medication"><i class="fas fa-times"></i></button>
+                `;
+                container.appendChild(newEntry);
+            });
+
+            // Gestion de la suppression de médicaments
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-medication') || e.target.closest('.remove-medication')) {
+                    const entry = e.target.closest('.medication-entry');
+                    if (entry) {
+                        entry.remove();
+                    }
+                }
+            });
+
+            // Gestion des boutons de filtre
+            document.querySelectorAll('[id$="Btn"]').forEach(btn => {
+                if (btn.id.includes('filter')) {
+                    btn.addEventListener('click', function() {
+                        alert('Fonctionnalité de filtrage à implémenter');
+                    });
+                }
+            });
+
+            // Gestion des boutons d'impression
+            document.querySelectorAll('[id$="Btn"]').forEach(btn => {
+                if (btn.id.includes('print')) {
+                    btn.addEventListener('click', function() {
+                        // Détecter le contexte (quel onglet est actif)
+                        const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+                        alert(`Impression de l'onglet ${activeTab}`);
+                    });
+                }
+            });
+
+            // Gestion du bouton d'export
+            document.getElementById('exportMedicalBtn').addEventListener('click', function() {
+                alert('Export des données médicales au format PDF');
+            });
+
+            // Gestion des formulaires
+            document.querySelectorAll('form[id$="Form"]').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formType = this.id.replace('Form', '');
+                    alert(`${formType} enregistré avec succès`);
+                    closeModal(this.closest('.modal'));
+                    this.reset();
+                });
+            });
+
+            // Animation des éléments au chargement
+            const animateElements = () => {
+                const elements = document.querySelectorAll('.patient-profile, .tab-content');
+                elements.forEach((el, index) => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(20px)';
+                    el.style.transition = `all 0.3s ease ${index * 0.1}s`;
+                    
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, 100);
+                });
+            };
+            
+            animateElements();
+        });
+    </script>
+</body>
+</html>

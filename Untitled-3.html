@@ -1,0 +1,200 @@
+<?php
+session_start();
+
+// Vérification de l'authentification
+if (!isset($_SESSION['patient_id'])) {
+    header('Location: login.php');
+    exit();
+}
+
+// Configuration de la base de données
+$host = 'localhost';
+$dbname = 'espace_patient';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erreur de connexion à la base de données : " . $e->getMessage());
+}
+
+// Récupération des informations du patient
+$stmt = $pdo->prepare("SELECT * FROM patients WHERE id = ?");
+$stmt->execute([$_SESSION['patient_id']]);
+$patient = $stmt->fetch();
+
+// Récupération des statistiques
+$stats = [
+    'next_appointment' => null,
+    'documents_count' => 0,
+    'prescriptions_count' => 0
+];
+
+// Prochain rendez-vous
+$stmt = $pdo->prepare("SELECT * FROM appointments WHERE patient_id = ? AND date >= NOW() ORDER BY date ASC LIMIT 1");
+$stmt->execute([$_SESSION['patient_id']]);
+$stats['next_appointment'] = $stmt->fetch();
+
+// Nombre de documents
+$stmt = $pdo->prepare("SELECT COUNT(*) as count FROM documents WHERE patient_id = ?");
+$stmt->execute([$_SESSION['patient_id']]);
+$stats['documents_count'] = $stmt->fetch()['count'];
+
+// Nombre d'ordonnances
+$stmt = $pdo->prepare("SELECT COUNT(*) as count FROM prescriptions WHERE patient_id = ? AND expiration_date >= NOW()");
+$stmt->execute([$_SESSION['patient_id']]);
+$stats['prescriptions_count'] = $stmt->fetch()['count'];
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Espace Patient - Ma Santé en Ligne</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* [Votre CSS existant reste inchangé] */
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="logo-patient">
+            <img src="image/1.png" alt="Ma Santé en Ligne">
+            <span>Mon Espace Patient</span>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-profile">
+                <img src="<?php echo htmlspecialchars($patient['avatar_path'] ?? 'image/patient-avatar.jpg'); ?>" 
+                     alt="Photo de profil" class="user-avatar">
+                <span class="user-name">
+                    <?php echo htmlspecialchars($patient['prenom'] ?? 'Jean') . ' ' . htmlspecialchars($patient['nom'] ?? 'Dupont'); ?>
+                </span>
+            </div>
+            <a href="logout.php"><button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button></a>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.php" class="nav-link active">
+                        <i class="fas fa-home"></i>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="appointments.php" class="nav-link">
+                        <i class="fas fa-calendar-check"></i>
+                        Mes rendez-vous
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="documents.php" class="nav-link">
+                        <i class="fas fa-file-medical"></i>
+                        Mes documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="prescriptions.php" class="nav-link">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                        Mes ordonnances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="doctors.php" class="nav-link">
+                        <i class="fas fa-user-md"></i>
+                        Mes médecins
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="messages.php" class="nav-link">
+                        <i class="fas fa-comment-medical"></i>
+                        Messagerie
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.php" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Paramètres
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h2 class="welcome-title">Bonjour <?php echo htmlspecialchars($patient['prenom'] ?? 'Jean'); ?></h2>
+                <p class="welcome-text">
+                    Bienvenue sur votre espace patient. Consultez vos rendez-vous à venir,
+                    accédez à vos documents médicaux et gérez votre santé en toute simplicité.
+                </p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="cards-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Prochain RDV</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                    </div>
+                    <?php if ($stats['next_appointment']): ?>
+                        <p class="card-value"><?php echo date('d M Y', strtotime($stats['next_appointment']['date'])); ?></p>
+                        <p class="card-text"><?php echo htmlspecialchars($stats['next_appointment']['doctor_name']); ?></p>
+                    <?php else: ?>
+                        <p class="card-value">Aucun RDV</p>
+                        <p class="card-text">Prenez rendez-vous</p>
+                    <?php endif; ?>
+                    <a href="appointments.php" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-info-circle"></i> Détails
+                    </a>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Documents</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                    </div>
+                    <p class="card-value"><?php echo $stats['documents_count']; ?></p>
+                    <p class="card-text">Documents médicaux disponibles</p>
+                    <a href="documents.php" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-folder-open"></i> Voir
+                    </a>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Ordonnances</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-prescription-bottle-alt"></i>
+                        </div>
+                    </div>
+                    <p class="card-value"><?php echo $stats['prescriptions_count']; ?></p>
+                    <p class="card-text">Ordonnances actives</p>
+                    <a href="prescriptions.php" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-list-ul"></i> Consulter
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // [Votre JavaScript existant reste inchangé]
+    </script>
+</body>
+</html>

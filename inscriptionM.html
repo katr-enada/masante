@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Gestion DME</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --secondary-dark: #27ae60;
+            --danger: #e74c3c;
+            --danger-dark: #c0392b;
+            --warning: #f39c12;
+            --warning-dark: #e67e22;
+            --info: #1abc9c;
+            --info-dark: #16a085;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #95a5a6;
+            --dark-gray: #7f8c8d;
+            --white: #ffffff;
+            --black: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--black);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .registration-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .registration-header .logo {
+            width: 100px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+
+        .registration-header h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .registration-header p {
+            color: var(--gray);
+        }
+
+        .registration-form .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .registration-form .form-label {
+            display: flex;
+            align-items: center;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .registration-form .form-label i {
+            margin-right: 0.5rem;
+            color: var(--gray);
+            width: 16px;
+            text-align: center;
+        }
+
+        .registration-form .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--dark);
+            background-color: var(--white);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .registration-form .form-control:focus {
+            border-color: var(--primary);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 38px;
+            cursor: pointer;
+            color: var(--gray);
+            background: none;
+            border: none;
+            font-size: 1rem;
+            padding: 0.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .registration-container {
+                padding: 1.5rem;
+            }
+            
+            .password-toggle {
+                top: 42px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+            
+            .registration-container {
+                padding: 1rem;
+            }
+            
+            .registration-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <div class="registration-header">
+            <img src="image/1.png" alt="Logo Médical" class="logo">
+            <h1>Créer un compte</h1>
+            <p>Système de gestion électronique des dossiers patients</p>
+        </div>
+        
+        <form class="registration-form" id="registrationForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lastname"><i class="fas fa-user"></i> Nom</label>
+                    <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Entrez votre nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="firstname"><i class="fas fa-user"></i> Prénom</label>
+                    <input type="text" id="firstname" name="firstname" class="form-control" placeholder="Entrez votre prénom" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Entrez votre email" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Minimum 8 caractères" required minlength="8">
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword"><i class="fas fa-lock"></i> Confirmation</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirmez le mot de passe" required minlength="8">
+                    <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div id="passwordError" class="error"></div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthdate"><i class="fas fa-calendar"></i> Date de naissance</label>
+                    <input type="date" id="birthdate" name="birthdate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender"><i class="fas fa-venus-mars"></i> Sexe</label>
+                    <select id="gender" name="gender" class="form-control" required>
+                        <option value="">Sélectionner</option>
+                        <option value="M">Masculin</option>
+                        <option value="F">Féminin</option>
+                        <option value="O">Autre</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone"><i class="fas fa-phone"></i> Téléphone</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Ex: 0612345678" required pattern="[0-9]{10}">
+            </div>
+            
+            <div class="form-group">
+                <label for="address"><i class="fas fa-map-marker-alt"></i> Adresse</label>
+                <input type="text" id="address" name="address" class="form-control" placeholder="Entrez votre adresse" required>
+            </div>
+            
+            
+                
+                <div class="form-group">
+                    <label for="city"><i class="fas fa-city"></i> Ville</label>
+                    <input type="text" id="city" name="city" class="form-control" placeholder="Entrez votre ville" required>
+                </div>
+            
+            
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-user-plus"></i> S'inscrire
+            </button>
+            
+            <div class="login-link">
+                <p>Déjà inscrit ? <a href="loginP.html">Connectez-vous</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fonction pour afficher/masquer le mot de passe
+            function setupPasswordToggle(passwordFieldId, toggleButtonId) {
+                const toggleButton = document.querySelector(toggleButtonId);
+                const passwordField = document.querySelector(passwordFieldId);
+                const icon = toggleButton.querySelector('i');
+                
+                toggleButton.addEventListener('click', function() {
+                    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordField.setAttribute('type', type);
+                    
+                    // Changer l'icône
+                    icon.classList.toggle('fa-eye');
+                    icon.classList.toggle('fa-eye-slash');
+                    
+                    // Garder le focus sur le champ
+                    passwordField.focus();
+                });
+            }
+
+            // Configurer les toggles pour les deux champs de mot de passe
+            setupPasswordToggle('#password', '#togglePassword');
+            setupPasswordToggle('#confirmPassword', '#toggleConfirmPassword');
+
+            // Validation en temps réel des mots de passe
+            const passwordField = document.getElementById('password');
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            const passwordError = document.getElementById('passwordError');
+
+            function validatePassword() {
+                const password = passwordField.value;
+                const confirmPassword = confirmPasswordField.value;
+                
+                if (password.length > 0 && password.length < 8) {
+                    passwordError.textContent = "Le mot de passe doit contenir au moins 8 caractères";
+                    passwordError.style.display = 'block';
+                    return false;
+                }
+                
+                if (confirmPassword.length > 0 && password !== confirmPassword) {
+                    passwordError.textContent = "Les mots de passe ne correspondent pas";
+                    passwordError.style.display = 'block';
+                    return false;
+                }
+                
+                passwordError.style.display = 'none';
+                return true;
+            }
+
+            passwordField.addEventListener('input', validatePassword);
+            confirmPasswordField.addEventListener('input', validatePassword);
+
+            // Validation du formulaire
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!validatePassword()) {
+                    return;
+                }
+                
+                // Validation supplémentaire si nécessaire
+                
+                // Simulation d'envoi réussi
+                console.log('Formulaire soumis avec succès');
+                alert('Inscription réussie ! Vous allez être redirigé...');
+                
+                // Redirection après 1 seconde
+                setTimeout(function() {
+                    window.location.href = "1,1.html"; // Correction du nom de fichier
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

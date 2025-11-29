@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Médecins - Ma Santé en Ligne</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a89dc;
+            --primary-light: #e8f4fd;
+            --primary-dark: #2a5a9a;
+            --secondary: #6cbbf0;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray: #6b7280;
+            --gray-dark: #374151;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-patient {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-patient img {
+            height: 50px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Sidebar */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            padding: 2rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            height: calc(100vh - 72px);
+            top: 72px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: var(--gray-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(74, 137, 220, 0.3);
+        }
+
+        /* Médecins Section */
+        .doctors-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .doctors-filter {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: var(--white);
+            color: var(--gray-dark);
+        }
+
+        .search-group {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.7rem 1rem 0.7rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E") no-repeat 1rem center;
+        }
+
+        .doctors-list {
+            padding: 0;
+        }
+
+        .doctor-card {
+            display: flex;
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .doctor-card:last-child {
+            border-bottom: none;
+        }
+
+        .doctor-card:hover {
+            background: var(--primary-light);
+        }
+
+        .doctor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            margin-right: 1.5rem;
+        }
+
+        .doctor-info {
+            flex: 1;
+        }
+
+        .doctor-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .doctor-specialty {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray);
+        }
+
+        .doctor-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .action-btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .action-btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .action-btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        .doctor-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-active {
+            background: var(--success);
+        }
+
+        .status-inactive {
+            background: var(--gray);
+        }
+
+        .status-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Ajouter un médecin modal */
+        .add-doctor-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: var(--white);
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--primary-light);
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+                padding: 1.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding: 1rem;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .nav-menu {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 0;
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+            }
+            
+            .nav-link {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .doctor-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .doctor-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .doctor-meta {
+                justify-content: center;
+            }
+            
+            .doctor-actions {
+                justify-content: center;
+            }
+            
+            .search-group {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .main-content {
+                padding: 1.5rem 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .doctors-filter {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .filter-group {
+                width: 100%;
+            }
+            
+            .doctor-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .modal-content {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="logo-patient">
+            <img src="image/1.png" alt="Ma Santé en Ligne">
+            <span>Mon Espace Patient</span>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-profile">
+                <img src="image/patient-avatar.jpg" alt="Photo de profil" class="user-avatar">
+                <span class="user-name">Jean Dupont</span>
+            </div>
+            <a href="index2.html"><button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button></a>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="2,1.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,2.html" class="nav-link">
+                        <i class="fas fa-calendar-check"></i>
+                        Mes rendez-vous
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,3.html" class="nav-link">
+                        <i class="fas fa-file-medical"></i>
+                        Mes documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,4.html" class="nav-link">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                        Mes ordonnances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,5.html" class="nav-link active">
+                        <i class="fas fa-user-md"></i>
+                        Mes médecins
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,6.html" class="nav-link">
+                        <i class="fas fa-comment-medical"></i>
+                        Messagerie
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,7.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Paramètres
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-user-md"></i> Mes médecins
+                </h1>
+               
+            </div>
+
+            <!-- Médecins Container -->
+            <div class="doctors-container">
+                <!-- Filtres -->
+                <div class="doctors-filter">
+                   
+                    <div class="search-group">
+                        <label for="doctor-search" class="filter-label">Rechercher</label>
+                        <input type="text" id="doctor-search" class="search-input" placeholder="Nom du médecin, établissement...">
+                    </div>
+                </div>
+
+                <!-- Liste des médecins -->
+                <div class="doctors-list">
+                    <!-- Médecin traitant -->
+                    <div class="doctor-card">
+                        <img src="image/doctor1.jpg" alt="Dr. Alain Petit" class="doctor-avatar">
+                        <div class="doctor-info">
+                            <h3 class="doctor-name">Dr. Alain Petit</h3>
+                            <div class="doctor-specialty">Médecin généraliste</div>
+                            <div class="doctor-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-map-marker-alt"></i> 15 Rue de la République, Lyon
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-phone"></i> 04 78 65 43 21
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-envelope"></i> a.petit@medecin.fr
+                                </div>
+                            </div>
+                            <div class="doctor-status">
+                                <div class="status-indicator status-active"></div>
+                                <div class="status-label">Médecin traitant</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Cardiologue -->
+                    <div class="doctor-card">
+                        <img src="image/doctor2.jpg" alt="Dr. Sophie Martin" class="doctor-avatar">
+                        <div class="doctor-info">
+                            <h3 class="doctor-name">Dr. Sophie Martin</h3>
+                            <div class="doctor-specialty">Cardiologue</div>
+                            <div class="doctor-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-map-marker-alt"></i> 22 Avenue des Ternes, Lyon
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-phone"></i> 04 72 34 56 78
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-envelope"></i> s.martin@cardio.fr
+                                </div>
+                            </div>
+                            <div class="doctor-status">
+                                <div class="status-indicator status-active"></div>
+                                <div class="status-label">Consultation en cours</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Dermatologue -->
+                    <div class="doctor-card">
+                        <img src="image/doctor3.jpg" alt="Dr. Amélie Dubois" class="doctor-avatar">
+                        <div class="doctor-info">
+                            <h3 class="doctor-name">Dr. Amélie Dubois</h3>
+                            <div class="doctor-specialty">Dermatologue</div>
+                            <div class="doctor-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-map-marker-alt"></i> 5 Rue de la Paix, Lyon
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-phone"></i> 04 26 48 35 79
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-envelope"></i> a.dubois@dermato.fr
+                                </div>
+                            </div>
+                            <div class="doctor-status">
+                                <div class="status-indicator status-inactive"></div>
+                                <div class="status-label">Non disponible actuellement</div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Ajouter un médecin -->
+    <div class="add-doctor-modal" id="addDoctorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter un médecin</h3>
+                <button class="close-modal" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addDoctorForm">
+                    <div class="form-group">
+                        <label for="doctor-type" class="form-label">Type de médecin</label>
+                        <select id="doctor-type" class="form-select" required>
+                            <option value="">Sélectionnez un type</option>
+                            <option value="generaliste">Médecin généraliste</option>
+                            <option value="specialiste">Médecin spécialiste</option>
+                            <option value="autre">Autre professionnel de santé</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doctor-lastname" class="form-label">Nom</label>
+                        <input type="text" id="doctor-lastname" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doctor-firstname" class="form-label">Prénom</label>
+                        <input type="text" id="doctor-firstname" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doctor-specialty-modal" class="form-label">Spécialité</label>
+                        <select id="doctor-specialty-modal" class="form-select">
+                            <option value="">Sélectionnez une spécialité</option>
+                            <option value="cardiologue">Cardiologue</option>
+                            <option value="dermatologue">Dermatologue</option>
+                            <option value="pediatre">Pédiatre</option>
+                            <option value="gynecologue">Gynécologue</option>
+                            <option value="ophtalmologue">Ophtalmologue</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doctor-address" class="form-label">Adresse du cabinet</label>
+                        <input type="text" id="doctor-address" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doctor-phone" class="form-label">Téléphone</label>
+                        <input type="tel" id="doctor-phone" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doctor-email" class="form-label">Email</label>
+                        <input type="email" id="doctor-email" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doctor-comment" class="form-label">Commentaire</label>
+                        <textarea id="doctor-comment" class="form-input" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn action-btn-outline" id="cancelAddDoctorBtn">Annuler</button>
+                <button class="btn action-btn-primary" id="submitAddDoctorBtn">Ajouter le médecin</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion du menu actif
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Confirmation de déconnexion
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+
+            // Gestion du modal
+            const addDoctorBtn = document.getElementById('addDoctorBtn');
+            const addDoctorModal = document.getElementById('addDoctorModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const cancelAddDoctorBtn = document.getElementById('cancelAddDoctorBtn');
+            
+            // Ouvrir le modal
+            addDoctorBtn.addEventListener('click', function() {
+                addDoctorModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Fermer le modal
+            function closeModal() {
+                addDoctorModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelAddDoctorBtn.addEventListener('click', closeModal);
+            
+            // Fermer en cliquant à l'extérieur
+            addDoctorModal.addEventListener('click', function(e) {
+                if (e.target === addDoctorModal) {
+                    closeModal();
+                }
+            });
+            
+            // Soumission du formulaire
+            const addDoctorForm = document.getElementById('addDoctorForm');
+            const submitAddDoctorBtn = document.getElementById('submitAddDoctorBtn');
+            
+            submitAddDoctorBtn.addEventListener('click', function() {
+                if (addDoctorForm.checkValidity()) {
+                    // Ici vous ajouteriez la logique pour enregistrer le nouveau médecin
+                    alert('Médecin ajouté avec succès !');
+                    closeModal();
+                    addDoctorForm.reset();
+                } else {
+                    addDoctorForm.reportValidity();
+                }
+            });
+            
+            // Filtrage des médecins
+            const filterSelects = document.querySelectorAll('.filter-select');
+            const searchInput = document.getElementById('doctor-search');
+            
+            function filterDoctors() {
+                const specialty = document.getElementById('doctor-specialty').value;
+                const status = document.getElementById('doctor-status').value;
+                const search = searchInput.value.toLowerCase();
+                
+                console.log(`Filtres: spécialité=${specialty}, statut=${status}, recherche=${search}`);
+                // Ici vous implémenteriez le filtrage réel des médecins
+            }
+            
+            filterSelects.forEach(select => {
+                select.addEventListener('change', filterDoctors);
+            });
+            
+            searchInput.addEventListener('input', filterDoctors);
+            
+            // Animation des cartes de médecin
+            const doctorCards = document.querySelectorAll('.doctor-card');
+            doctorCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

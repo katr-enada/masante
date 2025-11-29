@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres - Ma Santé en Ligne</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a89dc;
+            --primary-light: #e8f4fd;
+            --primary-dark: #2a5a9a;
+            --secondary: #6cbbf0;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray: #6b7280;
+            --gray-dark: #374151;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-patient {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-patient img {
+            height: 50px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Sidebar */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            padding: 2rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            height: calc(100vh - 72px);
+            top: 72px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: var(--gray-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(74, 137, 220, 0.3);
+        }
+
+        /* Paramètres Section */
+        .settings-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .settings-tab.active {
+            color: var(--primary);
+        }
+
+        .settings-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .settings-content {
+            padding: 2rem;
+        }
+
+        .settings-pane {
+            display: none;
+        }
+
+        .settings-pane.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Formulaire Paramètres */
+        .form-group {
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: var(--white);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Section Profil */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin-right: 1.5rem;
+        }
+
+        .avatar-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .avatar-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar-btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .avatar-btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .avatar-btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .avatar-btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        /* Section Notifications */
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .notification-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: auto;
+        }
+
+        .notification-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .notification-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .notification-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .notification-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .notification-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Section Sécurité */
+        .security-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .security-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .security-info {
+            flex: 1;
+        }
+
+        .security-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .security-description {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .security-action {
+            margin-left: 1rem;
+        }
+
+        /* Section Confidentialité */
+        .privacy-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .privacy-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .privacy-description {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .privacy-options {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .privacy-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+                padding: 1.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding: 1rem;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .nav-menu {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 0;
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+            }
+            
+            .nav-link {
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .settings-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .settings-tab {
+                display: inline-block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .avatar-actions {
+                justify-content: center;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .main-content {
+                padding: 1.5rem 1rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .settings-content {
+                padding: 1.5rem;
+            }
+            
+            .privacy-options {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="logo-patient">
+            <img src="image/1.png" alt="Ma Santé en Ligne">
+            <span>Mon Espace Patient</span>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-profile">
+                <img src="image/patient-avatar.jpg" alt="Photo de profil" class="user-avatar">
+                <span class="user-name">Jean Dupont</span>
+            </div>
+            <a href="index2.html"><button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button></a>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="2,1.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,2.html" class="nav-link">
+                        <i class="fas fa-calendar-check"></i>
+                        Mes rendez-vous
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,3.html" class="nav-link">
+                        <i class="fas fa-file-medical"></i>
+                        Mes documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,4.html" class="nav-link">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                        Mes ordonnances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,5.html" class="nav-link">
+                        <i class="fas fa-user-md"></i>
+                        Mes médecins
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,6.html" class="nav-link">
+                        <i class="fas fa-comment-medical"></i>
+                        Messagerie
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,7.html" class="nav-link active">
+                        <i class="fas fa-cog"></i>
+                        Paramètres
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-cog"></i> Paramètres
+                </h1>
+            </div>
+
+            <!-- Settings Container -->
+            <div class="settings-container">
+                <!-- Onglets -->
+                <div class="settings-tabs">
+                    <div class="settings-tab active" data-tab="profile">Profil</div>
+                    <div class="settings-tab" data-tab="notifications">Notifications</div>
+                    <div class="settings-tab" data-tab="security">Sécurité</div>
+                    <div class="settings-tab" data-tab="privacy">Confidentialité</div>
+                    <div class="settings-tab" data-tab="preferences">Préférences</div>
+                </div>
+
+                <!-- Contenu des onglets -->
+                <div class="settings-content">
+                    <!-- Onglet Profil -->
+                    <div class="settings-pane active" id="profile-pane">
+                        <div class="profile-header">
+                            <img src="image/patient-avatar.jpg" alt="Photo de profil" class="profile-avatar">
+                            <div>
+                                <h3>Jean Dupont</h3>
+                                <p>Membre depuis janvier 2022</p>
+                                <div class="avatar-actions">
+                                    <button class="avatar-btn avatar-btn-primary">
+                                        <i class="fas fa-camera"></i> Changer la photo
+                                    </button>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <form>
+                            <div class="form-group">
+                                <label for="firstname" class="form-label">Prénom</label>
+                                <input type="text" id="firstname" class="form-input" value="Jean">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="lastname" class="form-label">Nom</label>
+                                <input type="text" id="lastname" class="form-input" value="Dupont">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label">Adresse email</label>
+                                <input type="email" id="email" class="form-input" value="jean.dupont@example.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Téléphone</label>
+                                <input type="tel" id="phone" class="form-input" value="06 12 34 56 78">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="birthdate" class="form-label">Date de naissance</label>
+                                <input type="date" id="birthdate" class="form-input" value="1985-05-15">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address" class="form-label">Adresse</label>
+                                <textarea id="address" class="form-input">15 Rue de la République, 69001 Lyon</textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn action-btn-outline">
+                                    Annuler
+                                </button>
+                                <button type="submit" class="btn action-btn-primary">
+                                    Enregistrer les modifications
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Onglet Notifications -->
+                    <div class="settings-pane" id="notifications-pane">
+                        <h3>Préférences de notification</h3>
+                        <p>Gérez comment vous recevez les notifications et alertes.</p>
+                        
+                        <div class="notification-item">
+                            <div>
+                                <h4>Notifications par email</h4>
+                                <p>Recevoir les rappels et alertes par email</p>
+                            </div>
+                            <label class="notification-switch">
+                                <input type="checkbox" checked>
+                                <span class="notification-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div>
+                                <h4>Notifications SMS</h4>
+                                <p>Recevoir les rappels importants par SMS</p>
+                            </div>
+                            <label class="notification-switch">
+                                <input type="checkbox">
+                                <span class="notification-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div>
+                                <h4>Rappels de rendez-vous</h4>
+                                <p>Recevoir des rappels avant vos rendez-vous</p>
+                            </div>
+                            <label class="notification-switch">
+                                <input type="checkbox" checked>
+                                <span class="notification-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div>
+                                <h4>Nouveaux messages</h4>
+                                <p>Être alerté des nouveaux messages des médecins</p>
+                            </div>
+                            <label class="notification-switch">
+                                <input type="checkbox" checked>
+                                <span class="notification-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div>
+                                <h4>Documents disponibles</h4>
+                                <p>Recevoir une notification quand un nouveau document est disponible</p>
+                            </div>
+                            <label class="notification-switch">
+                                <input type="checkbox" checked>
+                                <span class="notification-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Onglet Sécurité -->
+                    <div class="settings-pane" id="security-pane">
+                        <h3>Sécurité du compte</h3>
+                        <p>Gérez les paramètres de sécurité de votre compte.</p>
+                        
+                        <div class="security-item">
+                            <div class="security-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="security-info">
+                                <div class="security-title">Mot de passe</div>
+                                <div class="security-description">Dernière modification il y a 3 mois</div>
+                            </div>
+                            <div class="security-action">
+                                <button class="btn action-btn-outline">Modifier</button>
+                            </div>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="security-info">
+                                <div class="security-title">Authentification à deux facteurs</div>
+                                <div class="security-description">Non activée</div>
+                            </div>
+                            <div class="security-action">
+                                <button class="btn action-btn-primary">Activer</button>
+                            </div>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="security-info">
+                                <div class="security-title">Sécurité du compte</div>
+                                <div class="security-description">Niveau de sécurité moyen</div>
+                            </div>
+                            <div class="security-action">
+                                <button class="btn action-btn-outline">Vérifier</button>
+                            </div>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="security-info">
+                                <div class="security-title">Appareils connectés</div>
+                                <div class="security-description">2 appareils actifs</div>
+                            </div>
+                            <div class="security-action">
+                                <button class="btn action-btn-outline">Gérer</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Onglet Confidentialité -->
+                    <div class="settings-pane" id="privacy-pane">
+                        <h3>Paramètres de confidentialité</h3>
+                        <p>Contrôlez qui peut voir vos informations et comment elles sont utilisées.</p>
+                        
+                        <div class="privacy-item">
+                            <div class="privacy-title">Partage des données médicales</div>
+                            <div class="privacy-description">
+                                Autoriser mes médecins à accéder à mon dossier médical complet
+                            </div>
+                            <div class="privacy-options">
+                                <div class="privacy-option">
+                                    <input type="radio" id="share-all" name="data-sharing" checked>
+                                    <label for="share-all">Avec tous mes médecins</label>
+                                </div>
+                                <div class="privacy-option">
+                                    <input type="radio" id="share-some" name="data-sharing">
+                                    <label for="share-some">Seulement avec certains</label>
+                                </div>
+                                <div class="privacy-option">
+                                    <input type="radio" id="share-none" name="data-sharing">
+                                    <label for="share-none">Ne pas partager</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="privacy-item">
+                            <div class="privacy-title">Recherche médicale</div>
+                            <div class="privacy-description">
+                                Autoriser l'utilisation anonyme de mes données pour la recherche médicale
+                            </div>
+                            <div class="privacy-options">
+                                <div class="privacy-option">
+                                    <input type="radio" id="research-yes" name="medical-research" checked>
+                                    <label for="research-yes">Oui</label>
+                                </div>
+                                <div class="privacy-option">
+                                    <input type="radio" id="research-no" name="medical-research">
+                                    <label for="research-no">Non</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="privacy-item">
+                            <div class="privacy-title">Visibilité du profil</div>
+                            <div class="privacy-description">
+                                Qui peut voir votre profil patient sur la plateforme
+                            </div>
+                            <div class="privacy-options">
+                                <div class="privacy-option">
+                                    <input type="radio" id="visibility-all" name="profile-visibility" checked>
+                                    <label for="visibility-all">Tous les professionnels de santé</label>
+                                </div>
+                                <div class="privacy-option">
+                                    <input type="radio" id="visibility-doctors" name="profile-visibility">
+                                    <label for="visibility-doctors">Seulement mes médecins</label>
+                                </div>
+                                <div class="privacy-option">
+                                    <input type="radio" id="visibility-none" name="profile-visibility">
+                                    <label for="visibility-none">Personne</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn action-btn-outline">
+                                Annuler
+                            </button>
+                            <button type="submit" class="btn action-btn-primary">
+                                Enregistrer les préférences
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Onglet Préférences -->
+                    <div class="settings-pane" id="preferences-pane">
+                        <h3>Préférences de l'application</h3>
+                        <p>Personnalisez votre expérience sur la plateforme.</p>
+                        
+                        <div class="form-group">
+                            <label for="language" class="form-label">Langue</label>
+                            <select id="language" class="form-select">
+                                <option value="fr" selected>Français</option>
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                                <option value="de">Deutsch</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="theme" class="form-label">Thème</label>
+                            <select id="theme" class="form-select">
+                                <option value="light" selected>Clair</option>
+                                <option value="dark">Sombre</option>
+                                <option value="system">Système</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="timezone" class="form-label">Fuseau horaire</label>
+                            <select id="timezone" class="form-select">
+                                <option value="Europe/Paris" selected>Europe/Paris (UTC+1)</option>
+                                <option value="UTC">UTC</option>
+                                <option value="America/New_York">America/New York (UTC-5)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date-format" class="form-label">Format de date</label>
+                            <select id="date-format" class="form-select">
+                                <option value="dd/MM/yyyy" selected>JJ/MM/AAAA (15/11/2023)</option>
+                                <option value="MM/dd/yyyy">MM/JJ/AAAA (11/15/2023)</option>
+                                <option value="yyyy-MM-dd">AAAA-MM-JJ (2023-11-15)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn action-btn-outline">
+                                Réinitialiser
+                            </button>
+                            <button type="submit" class="btn action-btn-primary">
+                                Enregistrer les préférences
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion du menu actif
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Confirmation de déconnexion
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+
+            // Gestion des onglets des paramètres
+            const settingsTabs = document.querySelectorAll('.settings-tab');
+            settingsTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Désactiver tous les onglets et panneaux
+                    settingsTabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.settings-pane').forEach(p => p.classList.remove('active'));
+                    
+                    // Activer l'onglet et le panneau sélectionnés
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-pane`).classList.add('active');
+                });
+            });
+
+            // Gestion du changement de photo de profil
+            const changePhotoBtn = document.querySelector('.avatar-btn-primary');
+            if (changePhotoBtn) {
+                changePhotoBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Créer un input file caché
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = 'image/*';
+                    
+                    fileInput.onchange = e => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = event => {
+                                document.querySelector('.profile-avatar').src = event.target.result;
+                                document.querySelector('.user-avatar').src = event.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+                    
+                    fileInput.click();
+                });
+            }
+
+            // Animation des panneaux au chargement
+            const panes = document.querySelectorAll('.settings-pane');
+            panes.forEach(pane => {
+                if (pane.classList.contains('active')) {
+                    pane.style.opacity = '0';
+                    pane.style.transform = 'translateY(10px)';
+                    pane.style.transition = 'all 0.3s ease';
+                    
+                    setTimeout(() => {
+                        pane.style.opacity = '1';
+                        pane.style.transform = 'translateY(0)';
+                    }, 100);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

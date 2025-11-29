@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Ordonnances - Ma Santé en Ligne</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #4a89dc;
+            --primary-light: #e8f4fd;
+            --primary-dark: #2a5a9a;
+            --secondary: #6cbbf0;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --white: #ffffff;
+            --gray-light: #f5f7fa;
+            --gray: #6b7280;
+            --gray-dark: #374151;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-patient {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-patient img {
+            height: 50px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Sidebar */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            padding: 2rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            height: calc(100vh - 72px);
+            top: 72px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: var(--gray-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(74, 137, 220, 0.3);
+        }
+
+        /* Ordonnances Section */
+        .prescriptions-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .prescriptions-list {
+            padding: 0;
+        }
+
+        .prescription-card {
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .prescription-card:last-child {
+            border-bottom: none;
+        }
+
+        .prescription-card:hover {
+            background: var(--primary-light);
+        }
+
+        .prescription-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .prescription-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .prescription-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .prescription-details {
+            display: flex;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .detail-group {
+            min-width: 200px;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .prescription-medicines {
+            margin: 1rem 0;
+        }
+
+        .medicine-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 6px;
+            background: var(--gray-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .medicine-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .medicine-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .medicine-dosage {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-right: 1rem;
+        }
+
+        .prescription-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .action-btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .action-btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .action-btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        /* Modal de partage */
+        .share-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .share-modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalopen 0.3s;
+        }
+
+        @keyframes modalopen {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .share-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .share-modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .close-share-modal {
+            color: var(--gray);
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-share-modal:hover {
+            color: var(--danger);
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .share-option:hover {
+            background-color: var(--primary-light);
+        }
+
+        .share-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .share-label {
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .share-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .share-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* [Le reste du CSS précédent reste inchangé] */
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="logo-patient">
+            <img src="image/1.png" alt="Ma Santé en Ligne">
+            <span>Mon Espace Patient</span>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-profile">
+                <img src="image/patient-avatar.jpg" alt="Photo de profil" class="user-avatar">
+                <span class="user-name">Jean Dupont</span>
+            </div>
+            <a href="index2.html">
+                <button class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </a>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="2,1.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Tableau de bord
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,2.html" class="nav-link">
+                        <i class="fas fa-calendar-check"></i>
+                        Mes rendez-vous
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,3.html" class="nav-link">
+                        <i class="fas fa-file-medical"></i>
+                        Mes documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,4.html" class="nav-link active">
+                        <i class="fas fa-prescription-bottle-alt"></i>
+                        Mes ordonnances
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,5.html" class="nav-link">
+                        <i class="fas fa-user-md"></i>
+                        Mes médecins
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,6.html" class="nav-link">
+                        <i class="fas fa-comment-medical"></i>
+                        Messagerie
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2,7.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Paramètres
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-prescription-bottle-alt"></i> Mes ordonnances
+                </h1>
+            </div>
+
+            <!-- Ordonnances Container -->
+            <div class="prescriptions-container">
+                <!-- Liste des ordonnances -->
+                <div class="prescriptions-list">
+                    <!-- Ordonnance 1 -->
+                    <div class="prescription-card">
+                        <div class="prescription-header">
+                            <h3 class="prescription-title">Ordonnance médicamenteuse</h3>
+                        </div>
+                        <div class="prescription-details">
+                            <div class="detail-group">
+                                <div class="detail-label">Prescrite le</div>
+                                <div class="detail-value">15/11/2023</div>
+                            </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Valide jusqu'au</div>
+                                <div class="detail-value">15/02/2024</div>
+                            </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Médecin prescripteur</div>
+                                <div class="detail-value">Dr. Alain Petit</div>
+                            </div>
+                        </div>
+                        <div class="prescription-medicines">
+                            <div class="medicine-item">
+                                <div class="medicine-icon">
+                                    <i class="fas fa-pills"></i>
+                                </div>
+                                <div class="medicine-name">Doliprane 1000mg</div>
+                                <div class="medicine-dosage">1 comprimé, 3 fois par jour</div>
+                            </div>
+                            <div class="medicine-item">
+                                <div class="medicine-icon">
+                                    <i class="fas fa-pills"></i>
+                                </div>
+                                <div class="medicine-name">Ibuprofène 400mg</div>
+                                <div class="medicine-dosage">1 comprimé si nécessaire</div>
+                            </div>
+                        </div>
+                        <div class="prescription-actions">
+                            <button class="action-btn action-btn-primary download-prescription">
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </button>
+                            <button class="action-btn action-btn-outline share-prescription">
+                                <i class="fas fa-share-alt"></i> Partager
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Ordonnance 2 -->
+                    <div class="prescription-card">
+                        <div class="prescription-header">
+                            <h3 class="prescription-title">Ordonnance pour analyses</h3>
+                        </div>
+                        <div class="prescription-details">
+                            <div class="detail-group">
+                                <div class="detail-label">Prescrite le</div>
+                                <div class="detail-value">10/10/2023</div>
+                            </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Valide jusqu'au</div>
+                                <div class="detail-value">10/01/2024</div>
+                            </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Médecin prescripteur</div>
+                                <div class="detail-value">Dr. Sophie Martin</div>
+                            </div>
+                        </div>
+                        <div class="prescription-medicines">
+                            <div class="medicine-item">
+                                <div class="medicine-icon">
+                                    <i class="fas fa-vial"></i>
+                                </div>
+                                <div class="medicine-name">Bilan sanguin complet</div>
+                                <div class="medicine-dosage">NFS, CRP, Glycémie</div>
+                            </div>
+                            <div class="medicine-item">
+                                <div class="medicine-icon">
+                                    <i class="fas fa-urine"></i>
+                                </div>
+                                <div class="medicine-name">Analyse d'urine</div>
+                                <div class="medicine-dosage">ECBU</div>
+                            </div>
+                        </div>
+                        <div class="prescription-actions">
+                            <button class="action-btn action-btn-primary download-prescription">
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </button>
+                            <button class="action-btn action-btn-outline share-prescription">
+                                <i class="fas fa-share-alt"></i> Partager
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de partage -->
+    <div id="shareModal" class="share-modal">
+        <div class="share-modal-content">
+            <div class="share-modal-header">
+                <h3 class="share-modal-title">Partager l'ordonnance</h3>
+                <span class="close-share-modal">&times;</span>
+            </div>
+            <div class="share-options">
+                <div class="share-option" data-share="email">
+                    <i class="fas fa-envelope share-icon"></i>
+                    <span class="share-label">Email</span>
+                </div>
+                <div class="share-option" data-share="whatsapp">
+                    <i class="fab fa-whatsapp share-icon"></i>
+                    <span class="share-label">WhatsApp</span>
+                </div>
+                <div class="share-option" data-share="messenger">
+                    <i class="fab fa-facebook-messenger share-icon"></i>
+                    <span class="share-label">Messenger</span>
+                </div>
+                <div class="share-option" data-share="sms">
+                    <i class="fas fa-sms share-icon"></i>
+                    <span class="share-label">SMS</span>
+                </div>
+                <div class="share-option" data-share="pharmacie">
+                    <i class="fas fa-prescription-bottle-alt share-icon"></i>
+                    <span class="share-label">Pharmacie</span>
+                </div>
+                <div class="share-option" data-share="laboratoire">
+                    <i class="fas fa-flask share-icon"></i>
+                    <span class="share-label">Laboratoire</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const { jsPDF } = window.jspdf;
+            let currentPrescriptionToShare = null;
+
+            // Fonction pour générer et télécharger le PDF
+            async function generatePrescriptionPDF() {
+                try {
+                    // Créer un contenu HTML pour l'ordonnance
+                    const prescriptionContent = `
+                        <div style="font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px;">
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <h1 style="color: #316396;">Cabinet Médical du Dr. Dupont</h1>
+                                <p>123 Rue de la Santé, 75000 Paris</p>
+                                <p>Tél: 01 23 45 67 89</p>
+                            </div>
+                            
+                            <h2 style="color: #316396; border-bottom: 2px solid #316396; padding-bottom: 10px;">
+                                Ordonnance Médicale
+                            </h2>
+                            
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                                <div>
+                                    <p style="font-weight: bold; color: #316396;">Patient</p>
+                                    <p>Jean Dupont</p>
+                                    <p>15/03/1985 (38 ans)</p>
+                                </div>
+                                <div>
+                                    <p style="font-weight: bold; color: #316396;">Date de prescription</p>
+                                    <p>${new Date().toLocaleDateString('fr-FR')}</p>
+                                </div>
+                            </div>
+                            
+                            <h3 style="color: #316396;">Médicaments prescrits</h3>
+                            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                                <thead>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Médicament</th>
+                                        <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Posologie</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">Doliprane 1000mg</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">1 comprimé, 3 fois par jour</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">Ibuprofène 400mg</td>
+                                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">1 comprimé si nécessaire</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div style="margin-top: 50px; text-align: right;">
+                                <div style="width: 300px; border-top: 1px solid #333; margin-left: auto; padding-top: 5px; text-align: center;">
+                                    Signature du médecin
+                                </div>
+                                <p>Dr. Alain Petit</p>
+                                <p>Médecin Généraliste</p>
+                            </div>
+                        </div>
+                    `;
+
+                    // Créer un élément temporaire pour le PDF
+                    const tempDiv = document.createElement('div');
+                    tempDiv.style.position = 'absolute';
+                    tempDiv.style.left = '-9999px';
+                    tempDiv.innerHTML = prescriptionContent;
+                    document.body.appendChild(tempDiv);
+
+                    // Générer le PDF
+                    const canvas = await html2canvas(tempDiv, {
+                        scale: 2,
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = 210;
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    
+                    // Nettoyer
+                    document.body.removeChild(tempDiv);
+                    
+                    return pdf;
+                } catch (error) {
+                    console.error('Erreur lors de la génération du PDF:', error);
+                    alert('Une erreur est survenue lors de la génération du PDF.');
+                    return null;
+                }
+            }
+
+            // Télécharger l'ordonnance
+            async function downloadPrescription() {
+                const pdf = await generatePrescriptionPDF();
+                if (pdf) {
+                    pdf.save('ordonnance_medicale.pdf');
+                }
+            }
+
+            // Gestion du partage
+            async function sharePrescription(shareMethod) {
+                const pdf = await generatePrescriptionPDF();
+                if (!pdf) return;
+
+                const pdfBlob = pdf.output('blob');
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                const prescriptionTitle = "Ordonnance médicale";
+                const prescriptionText = "Voici mon ordonnance médicale du " + new Date().toLocaleDateString('fr-FR');
+
+                switch(shareMethod) {
+                    case 'email':
+                        window.location.href = `mailto:?subject=${encodeURIComponent(prescriptionTitle)}&body=${encodeURIComponent(prescriptionText)}&attachment=${pdfUrl}`;
+                        break;
+                    case 'whatsapp':
+                        window.open(`https://wa.me/?text=${encodeURIComponent(prescriptionText + ' ' + pdfUrl)}`, '_blank');
+                        break;
+                    case 'messenger':
+                        // Note: Le partage direct sur Messenger nécessite une intégration plus complexe
+                        window.open(`https://www.facebook.com/dialog/send?link=${encodeURIComponent(pdfUrl)}&app_id=YOUR_APP_ID&redirect_uri=${encodeURIComponent(window.location.href)}`, '_blank');
+                        break;
+                    case 'sms':
+                        window.location.href = `sms:?body=${encodeURIComponent(prescriptionText + ' ' + pdfUrl)}`;
+                        break;
+                    case 'pharmacie':
+                        // Exemple avec une pharmacie spécifique (à adapter)
+                        window.location.href = `mailto:pharmacie@exemple.com?subject=${encodeURIComponent("Ordonnance à préparer")}&body=${encodeURIComponent("Bonjour,\n\nVeuillez trouver ci-joint mon ordonnance.\n\nCordialement,")}&attachment=${pdfUrl}`;
+                        break;
+                    case 'laboratoire':
+                        // Exemple avec un laboratoire spécifique (à adapter)
+                        window.location.href = `mailto:laboratoire@exemple.com?subject=${encodeURIComponent("Ordonnance d'analyses")}&body=${encodeURIComponent("Bonjour,\n\nVeuillez trouver ci-joint mon ordonnance pour analyses.\n\nCordialement,")}&attachment=${pdfUrl}`;
+                        break;
+                    default:
+                        // Utilisation de l'API Web Share si disponible
+                        if (navigator.share) {
+                            navigator.share({
+                                title: prescriptionTitle,
+                                text: prescriptionText,
+                                files: [new File([pdfBlob], 'ordonnance.pdf', { type: 'application/pdf' })]
+                            }).catch(err => {
+                                console.log('Erreur de partage:', err);
+                                alert("Le partage a échoué. Veuillez essayer une autre méthode.");
+                            });
+                        } else {
+                            alert("Méthode de partage non prise en charge sur cet appareil.");
+                        }
+                }
+            }
+
+            // Gestion des boutons de téléchargement
+            document.querySelectorAll('.download-prescription').forEach(button => {
+                button.addEventListener('click', downloadPrescription);
+            });
+
+            // Gestion des boutons de partage
+            document.querySelectorAll('.share-prescription').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentPrescriptionToShare = this.closest('.prescription-card');
+                    document.getElementById('shareModal').style.display = 'block';
+                });
+            });
+
+            // Gestion des options de partage
+            document.querySelectorAll('.share-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const shareMethod = this.getAttribute('data-share');
+                    sharePrescription(shareMethod);
+                    document.getElementById('shareModal').style.display = 'none';
+                });
+            });
+
+            // Fermer le modal
+            document.querySelector('.close-share-modal').addEventListener('click', function() {
+                document.getElementById('shareModal').style.display = 'none';
+            });
+
+            // Fermer le modal en cliquant à l'extérieur
+            window.addEventListener('click', function(event) {
+                if (event.target === document.getElementById('shareModal')) {
+                    document.getElementById('shareModal').style.display = 'none';
+                }
+            });
+
+            // [Le reste du JavaScript précédent reste inchangé]
+        });
+    </script>
+</body>
+</html>

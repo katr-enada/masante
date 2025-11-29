@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Santé en Ligne - Accueil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bleu-principal: #4a89dc;    /* Bleu plus clair comme couleur principale */
+            --bleu-clair: #e8f4fd;        /* Arrière-plan plus clair */
+            --bleu-moyen: #93c5fd;        /* Accents */
+            --bleu-fonce: #2a5a9a;        /* Pour les textes et éléments foncés */
+            --blanc: #ffffff;             /* Éléments blancs */
+            --gris: #6b7280;              /* Texte secondaire */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bleu-clair);
+            color: var(--bleu-fonce);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bleu-principal);
+            color: var(--blanc);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo img {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: var(--bleu-fonce);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--gris);
+            max-width: 800px;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        /* Login Options */
+        .login-row {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .login-option {
+            background: var(--blanc);
+            border-radius: 12px;
+            padding: 2rem;
+            min-width: 250px;
+            box-shadow: 0 4px 12px rgba(74, 137, 220, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid var(--bleu-moyen);
+        }
+
+        .login-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(74, 137, 220, 0.2);
+        }
+
+        .login-icon {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 1.5rem;
+            background-color: var(--blanc);
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid var(--bleu-moyen);
+            transition: transform 0.3s;
+        }
+
+        .login-option:hover .login-icon {
+            transform: scale(1.05);
+            border-color: var(--bleu-principal);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--bleu-fonce);
+        }
+
+        .login-btn {
+            background: var(--bleu-principal);
+            color: var(--blanc);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 8px rgba(74, 137, 220, 0.2);
+        }
+
+        .login-btn:hover {
+            background: var(--bleu-fonce);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(74, 137, 220, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bleu-principal);
+            color: var(--blanc);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--blanc);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .footer-copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .login-row {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .logo img {
+                height: 70px;
+            }
+            
+            .logo-text {
+                font-size: 2rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .login-row {
+                gap: 1.5rem;
+            }
+            
+            .login-option {
+                min-width: 200px;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .login-option {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="image/1.png" alt="Ma Santé en Ligne">
+        </div>
+        <h1 class="logo-text">Ma Santé en Ligne</h1>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <h2 class="page-title">Bienvenue sur votre plateforme santé</h2>
+        <p class="page-subtitle">
+            Connectez-vous selon votre profil pour accéder à vos services dédiés
+        </p>
+        
+        <div class="login-row">
+            <!-- Médecin -->
+            <a href="loginM.html" class="login-option">
+                <img src="image/2.png" alt="Médecin" class="login-icon">
+                <h3 class="login-title">Médecin</h3>
+                <button class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+            </a>
+            
+            <!-- Patient -->
+            <a href="loginP.html" class="login-option">
+                <img src="image/3.png" alt="Patient" class="login-icon">
+                <h3 class="login-title">Patient</h3>
+                <button class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+            </a>
+            
+            <!-- Infirmier -->
+            <a href="loginI.html" class="login-option">
+                <img src="image/4.png" alt="Infirmier" class="login-icon">
+                <h3 class="login-title">Infirmier</h3>
+                <button class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+            </a>
+            
+            <!-- Administration -->
+            <a href="loginA.html" class="login-option">
+                <img src="image/5.png" alt="Administration" class="login-icon">
+                <h3 class="login-title">Administration</h3>
+                <button class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Mentions légales</a>
+            <a href="#">Confidentialité</a>
+            <a href="#">Contact</a>
+            <a href="#">Aide</a>
+        </div>
+        <p class="footer-copyright">
+            © 2025 Ma Santé en Ligne - Tous droits réservés
+        </p>
+    </footer>
+
+    <script>
+        // Animation pour les cartes au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.login-option');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

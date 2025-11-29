@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Imprimer Ordonnance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .print-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            height: 80px;
+        }
+
+        .header h1 {
+            color: #316396;
+            margin: 10px 0 5px;
+        }
+
+        .header p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .prescription-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .prescription-info-item {
+            flex: 1;
+        }
+
+        .prescription-info-label {
+            font-weight: bold;
+            color: #316396;
+            margin-bottom: 5px;
+        }
+
+        .prescription-info-value {
+            font-size: 16px;
+        }
+
+        .medications-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .medications-table th, .medications-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .medications-table th {
+            background-color: #f8f9fa;
+            color: #316396;
+            font-weight: bold;
+        }
+
+        .notes-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .notes-label {
+            font-weight: bold;
+            color: #316396;
+            margin-bottom: 10px;
+        }
+
+        .notes-content {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+
+        .doctor-signature {
+            margin-top: 100px;
+            text-align: right;
+        }
+
+        .signature-line {
+            width: 300px;
+            border-top: 1px solid #333;
+            margin: 40px 0 10px auto;
+            text-align: center;
+            padding-top: 5px;
+        }
+
+        .print-actions {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        @media print {
+            .print-actions {
+                display: none;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            .print-container {
+                border: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <div class="header">
+            <img src="image/1.png" alt="Logo Cabinet Médical">
+            <h1>Cabinet Médical du Dr. Dupont</h1>
+            <p>123 Rue de la Santé, 75000 Paris</p>
+            <p>Tél: 01 23 45 67 89 - RPPS: 12345678901</p>
+        </div>
+
+        <div class="prescription-header">
+            <h2>Ordonnance Médicale #ORD-2023-002</h2>
+        </div>
+
+        <div class="prescription-info">
+            <div class="prescription-info-item">
+                <div class="prescription-info-label">Patient</div>
+                <div class="prescription-info-value">Marie Dubois</div>
+                <div class="prescription-info-value">15/03/1985 (38 ans)</div>
+            </div>
+            <div class="prescription-info-item">
+                <div class="prescription-info-label">Date de prescription</div>
+                <div class="prescription-info-value">16 juin 2023</div>
+            </div>
+        </div>
+
+        <h3>Médicaments prescrits</h3>
+        <table class="medications-table">
+            <thead>
+                <tr>
+                    <th>Médicament</th>
+                    <th>Dosage</th>
+                    <th>Posologie</th>
+                    <th>Durée</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Paracétamol 500mg</td>
+                    <td>500mg</td>
+                    <td>1 comprimé, 3 fois par jour</td>
+                    <td>7 jours</td>
+                </tr>
+                <tr>
+                    <td>Ibuprofène 200mg</td>
+                    <td>200mg</td>
+                    <td>1 comprimé, 2 fois par jour (pendant les repas)</td>
+                    <td>5 jours</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="notes-section">
+            <div class="notes-label">Notes du médecin</div>
+            <div class="notes-content">
+                Prendre le paracétamol en première intention en cas de douleur. 
+                Ne prendre l'ibuprofène qu'en cas de douleurs persistantes ou inflammatoires.
+                Consulter à nouveau si les symptômes persistent au-delà de 7 jours.
+            </div>
+        </div>
+
+        <div class="doctor-signature">
+            <div>Dr. Dupont</div>
+            <div>Médecin Généraliste</div>
+            <div class="signature-line">Signature</div>
+        </div>
+    </div>
+
+    <div class="print-actions">
+        <button onclick="window.print()" class="btn"><i class="fas fa-print"></i> Imprimer</button>
+       <a href="1,5.html"> <button onclick="window.close()" class="btn btn-secondary"><i class="fas fa-times"></i> Fermer</button></a>
+    </div>
+
+    <script>
+        // Impression automatique lors de l'ouverture de la page
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        };
+    </script>
+</body>
+</html>
